@@ -12,10 +12,10 @@ TWILIO_AUTH_TOKEN = "f9aa8b9b8a21185705d099eb6a621452"
 TWILIO_PHONE = "whatsapp:+14155238886"
 MY_PHONE = "whatsapp:+919096718193"
 
-# Step 1: Setup OpenAI client
+# Setup OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# Step 2: Get Stock Market News
+# Stock Market News
 def get_news():
     url = "https://newsapi.org/v2/top-headlines"
     params = {
@@ -29,11 +29,11 @@ def get_news():
     news_text = "\n\n".join([f"{a['title']} - {a['description']}" for a in articles[:5]])
     return news_text
 
-# Step 3: Summarize using GPT-4.1
+# Summarize using GPT-4.1
 def summarize_news(news_text):
     prompt = f"Summarize the following stock market news in 5 short bullet points with emojis:\n\n{news_text}"
     response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",  # ✅ supported model
+        model="gpt-3.5-turbo",  
         messages=[
             {"role": "system", "content": "You are a financial analyst assistant."},
             {"role": "user", "content": prompt}
@@ -42,7 +42,7 @@ def summarize_news(news_text):
     return response.choices[0].message.content.strip()
 
 
-# Step 4: Send to WhatsApp via Twilio
+#  Send to WhatsApp via Twilio
 def send_whatsapp(message):
     twilio_client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
     twilio_client.messages.create(
@@ -51,7 +51,7 @@ def send_whatsapp(message):
         to=MY_PHONE
     )
 
-# Step 5: Full Bot Task
+# Full Bot Task
 def run_daily_news_bot():
     print("⏳ Getting news...")
     news = get_news()
@@ -61,7 +61,7 @@ def run_daily_news_bot():
     print("✅ Sent on WhatsApp!")
 
 # Schedule daily at 8:30 AM (adjust time as needed)
-schedule.every().day.at("20:07").do(run_daily_news_bot)
+schedule.every().day.at("08:30").do(run_daily_news_bot)
 
 # For testing: Uncomment below to run instantly
 # run_daily_news_bot()
